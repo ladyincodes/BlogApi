@@ -9,6 +9,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// TODO: Add CORS policy here if needed
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
