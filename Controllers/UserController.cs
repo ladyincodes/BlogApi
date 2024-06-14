@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BlogApi.Data;
+using BlogApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BlogApi.Controllers
 {
@@ -6,15 +10,20 @@ namespace BlogApi.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
+        private readonly AppDbContext _dataContext;
+
         public UserController(IConfiguration configuration)
         {
-            Console.WriteLine(configuration.GetConnectionString("DefaultConnection"));
+            _dataContext = new AppDbContext(configuration);
         }
 
         [HttpGet("TestConnection")]
-        public DateTime TestConnection()
+        public IActionResult TestConnection()
         {
-            return DateTime.Now;
+            var currentDateTime = _dataContext.Database.SqlQueryRaw<DateTime>("SELECT GETDATE()")
+            .AsEnumerable()
+            .FirstOrDefault();
+            return Ok(currentDateTime);
         }
     }
 }
